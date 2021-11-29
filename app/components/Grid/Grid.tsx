@@ -28,8 +28,6 @@ function Grid({
 }: GridProps) {
   const infiniteScrollRef = useInfiniteScroll(loadMore);
 
-  console.log({ length: data.length });
-
   return !data.length ? (
     renderEmpty
   ) : (
