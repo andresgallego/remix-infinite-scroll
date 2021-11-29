@@ -1,12 +1,6 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-} from "react";
+import { createContext, useContext } from "react";
 
-import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
+import { useInfiniteScroll } from "../../hooks/useIntersectionObserver";
 import { GObject } from "../../types/Generics";
 
 type GridProps = {
@@ -20,42 +14,6 @@ type GridProps = {
 const GridContext = createContext<GObject<unknown> | undefined>(undefined);
 GridContext.displayName = "GridContext";
 
-function useInfiniteScroll(callbackParam: any) {
-  const observer = useRef<any>(null);
-
-  const callback = useCallback(
-    (entries) => {
-      if (entries.length === 0) {
-        return;
-      }
-
-      if (entries[0].isIntersecting) {
-        callbackParam();
-      }
-    },
-    [callbackParam]
-  );
-
-  const infiniteScrollRef = useCallback(
-    (node) => {
-      if (!node) {
-        return;
-      }
-
-      observer.current?.disconnect();
-
-      observer.current = new IntersectionObserver(callback);
-      observer.current.observe(node);
-    },
-    [callback]
-  );
-  useEffect(() => {
-    return () => observer.current?.disconnect();
-  }, []);
-
-  return infiniteScrollRef;
-}
-
 function Grid({
   data = [],
   renderEmpty = (
@@ -67,23 +25,7 @@ function Grid({
   children,
   childrenProps = {},
 }: GridProps) {
-  const lastElementRef = useRef<HTMLLIElement>(null);
-  const { observer, setElement, entries } = useIntersectionObserver();
-  useEffect(() => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const lastItem = entry.target;
-        observer.unobserve(lastItem);
-        loadMore();
-      }
-    });
-  }, [entries, loadMore, observer]);
-
-  useEffect(() => {
-    setElement(lastElementRef.current);
-  }, [data, setElement]);
-
-  // const lastElementRef = useInfiniteScroll(loadMore);
+  const infiniteScrollRef = useInfiniteScroll(loadMore);
 
   console.log({ length: data.length });
 
@@ -92,7 +34,7 @@ function Grid({
   ) : (
     <ul>
       {data.map((item: GObject<unknown>, index: number) => (
-        <li key={index} ref={lastElementRef}>
+        <li key={index} ref={infiniteScrollRef}>
           <GridProvider value={{ item, ...childrenProps }}>
             {children}
           </GridProvider>

@@ -15,9 +15,8 @@ import Card from "~/components/Card";
 
 import { Image } from "~/types/Image";
 import stylesUrl from "../styles/index.css";
-import { fetchData } from "@remix-run/react/data";
 
-const FIRST_PAGE = 1;
+let PAGE_NUMBER = 1;
 
 export const links: LinksFunction = () => {
   return [
@@ -28,45 +27,34 @@ export const links: LinksFunction = () => {
   ];
 };
 
-// type LoaderData = Array<Image>;
+type LoaderData = Array<Image>;
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
-  const pageSearchParam = url.searchParams.get("page") ?? FIRST_PAGE.toString();
+  const pageSearchParam = url.searchParams.get("page") ?? PAGE_NUMBER;
   const data = await fetch(
     `https://picsum.photos/v2/list?${new URLSearchParams([
-      ["page", pageSearchParam],
+      ["page", pageSearchParam.toString()],
     ])}&limit=5`
   );
   return data;
 };
-
-// export const loader: LoaderFunction = async ({ params }) => {
-//   console.log({ params });
-//   const res = await fetch(`https://picsum.photos/v2/list?limit=5`);
-//   return res;
-// };
 
 export default function Index() {
   const data = useLoaderData();
   let fetcher = useFetcher();
   const [images, setImages] = useState(data);
 
-  const [pageNumber, incrementPage] = useReducer(
-    (page) => page + 1,
-    FIRST_PAGE
-  );
-
   useEffect(() => {
     if (fetcher.data) {
-      setImages((prevData: any) => [...prevData, ...fetcher.data]);
+      setImages((prevData: LoaderData) => [...prevData, ...fetcher.data]);
     }
-  }, [fetcher.data]);
+  }, [fetcher.data, setImages]);
 
-  useEffect(() => {
-    if (pageNumber === FIRST_PAGE) return;
-    fetcher.submit(new URLSearchParams(`page=${pageNumber}`));
-  }, [pageNumber]);
+  const incrementPage = useCallback(() => {
+    PAGE_NUMBER += 1;
+    fetcher.submit(new URLSearchParams(`page=${PAGE_NUMBER}`));
+  }, []);
 
   return (
     <div className="container">
@@ -74,11 +62,11 @@ export default function Index() {
         <h1>
           Remix <span>infinite scroll</span>
         </h1>
-        <ClientOnly>
-          <Grid data={images} loadMore={incrementPage}>
-            <Card />
-          </Grid>
-        </ClientOnly>
+        {/* <ClientOnly> */}
+        <Grid data={images} loadMore={incrementPage}>
+          <Card />
+        </Grid>
+        {/* </ClientOnly> */}
         {/* <nav>
           <ul>
             <li>

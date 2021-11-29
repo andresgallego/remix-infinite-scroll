@@ -1,27 +1,39 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
-function useIntersectionObserver<TElement extends HTMLElement | null>(
-  options: Partial<IntersectionObserverInit> = {}
-) {
-  const [element, setElement] = useState<TElement>();
-  const [entries, setEntries] = useState<IntersectionObserverEntry[]>([]);
-  const observer = useRef<IntersectionObserver>(
-    new IntersectionObserver((observedEntries) => {
-      setEntries(observedEntries);
-    }, options)
+function useInfiniteScroll(callbackParam: any) {
+  const observer = useRef<any>();
+
+  const callback = useCallback(
+    ([entry]) => {
+      if (entry.length === 0 || !entry.isIntersecting) {
+        return;
+      }
+
+      // if (entry.isIntersecting) {
+      callbackParam();
+      // }
+    },
+    [callbackParam]
   );
 
+  const infiniteScrollRef = useCallback(
+    (node) => {
+      if (!node) {
+        return;
+      }
+
+      observer.current?.disconnect();
+
+      observer.current = new IntersectionObserver(callback);
+      observer.current.observe(node);
+    },
+    [callback]
+  );
   useEffect(() => {
-    const { current: currentObserver } = observer;
-    currentObserver.disconnect();
-    if (element) currentObserver.observe(element);
+    return () => observer.current?.disconnect();
+  }, []);
 
-    return () => {
-      if (currentObserver) currentObserver.disconnect();
-    };
-  }, [element]);
-
-  return { observer: observer?.current, setElement, entries };
+  return infiniteScrollRef;
 }
 
-export { useIntersectionObserver };
+export { useInfiniteScroll };
