@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import { LinksFunction } from "remix";
 
 import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 import { GObject } from "../../types/Generics";
@@ -32,9 +33,9 @@ function Grid({
   return !data.length ? (
     renderEmpty
   ) : (
-    <ul>
+    <ul className="grid-wrapper">
       {data.map((item: GObject<unknown>, index: number) => (
-        <li key={index} ref={infiniteScrollRef}>
+        <li className="grid-item-wrapper" key={index} ref={infiniteScrollRef}>
           <GridProvider value={{ item, ...childrenProps }}>
             {children}
           </GridProvider>

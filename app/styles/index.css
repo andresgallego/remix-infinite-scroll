@@ -4,9 +4,9 @@
  * pages!
  */
 
- body {
+/* body {
   background-image: var(--gradient-background);
-}
+} */
 
 .container {
   min-height: inherit;
@@ -72,4 +72,24 @@ nav ul a:hover {
   h1 span {
     font-size: 8rem;
   }
+}
+
+
+.grid-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 32px;
+  padding: var(--default-padding);
+  margin: 0 auto;
+}
+
+.grid-item-wrapper {
+  perspective: 1000px;
+}
+
+.card-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 13 / 10;
+  object-fit: cover;
 }

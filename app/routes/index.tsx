@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
-  Link,
   LinksFunction,
   LoaderFunction,
   useCatch,
@@ -33,7 +32,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const data = await fetch(
     `https://picsum.photos/v2/list?${new URLSearchParams([
       ["page", pageSearchParam.toString()],
-    ])}&limit=5`
+    ])}`
   );
   return data;
 };
@@ -68,7 +67,7 @@ export default function Index() {
   );
 }
 
-export function ErrorBoundary({ error }) {
+export function ErrorBoundary({ error }: { error: Error }) {
   return <div>{/* render an "unexpected error" message */}</div>;
 }
 

@@ -11,16 +11,19 @@ function Card() {
   const { item } = useGrid<CardProps>();
 
   return (
-    <div>
-      <figure>
-        <figcaption>
-          <img src={item.download_url} alt={item.author} />
-        </figcaption>
-        <figcaption>
-          Photo by
-          <span>{item.author}</span>
-        </figcaption>
-      </figure>
+    // <div className="card-wrapper">
+    //   <figure className="card-figure">
+    //     <figcaption className="card-front">
+    //       <img className="card-image" src={item.download_url} alt={item.author} />
+    //     </figcaption>
+    //     <figcaption>
+    //       Photo by
+    //       <span>{item.author}</span>
+    //     </figcaption>
+    //   </figure>
+    // </div>
+    <div className="card-wrapper">
+      <img className="card-image" src={item.download_url} alt={item.author} />
     </div>
   );
 }
