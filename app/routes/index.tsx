@@ -6,9 +6,7 @@ import {
   useCatch,
   useFetcher,
   useLoaderData,
-  useTransition,
 } from "remix";
-import { ClientOnly } from "remix-utils";
 
 import Grid from "~/components/Grid";
 import Card from "~/components/Card";
@@ -62,18 +60,9 @@ export default function Index() {
         <h1>
           Remix <span>infinite scroll</span>
         </h1>
-        {/* <ClientOnly> */}
         <Grid data={images} loadMore={incrementPage}>
           <Card />
         </Grid>
-        {/* </ClientOnly> */}
-        {/* <nav>
-          <ul>
-            <li>
-              <Link to="jokes">Read Jokes</Link>
-            </li>
-          </ul>
-        </nav> */}
       </div>
     </div>
   );

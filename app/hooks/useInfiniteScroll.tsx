@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useRef } from "react";
 
-function useInfiniteScroll(callbackParam: any) {
-  const observer = useRef<any>();
+function useInfiniteScroll(
+  callbackParam: () => void,
+  options: Partial<IntersectionObserverInit> = {}
+) {
+  const observer = useRef<IntersectionObserver>();
 
   const callback = useCallback(
     ([entry]) => {
@@ -9,9 +12,7 @@ function useInfiniteScroll(callbackParam: any) {
         return;
       }
 
-      // if (entry.isIntersecting) {
       callbackParam();
-      // }
     },
     [callbackParam]
   );
@@ -24,7 +25,7 @@ function useInfiniteScroll(callbackParam: any) {
 
       observer.current?.disconnect();
 
-      observer.current = new IntersectionObserver(callback);
+      observer.current = new IntersectionObserver(callback, options);
       observer.current.observe(node);
     },
     [callback]

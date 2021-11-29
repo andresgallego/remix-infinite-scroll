@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 
-import { useInfiniteScroll } from "../../hooks/useIntersectionObserver";
+import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 import { GObject } from "../../types/Generics";
 
 type GridProps = {
