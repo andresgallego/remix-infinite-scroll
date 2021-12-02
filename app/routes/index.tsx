@@ -9,7 +9,7 @@ import {
 
 import Grid from "~/components/Grid";
 import Card from "~/components/Card";
-
+import { useInfiniteScroll } from "~/hooks/useInfiniteScroll";
 import { Image } from "~/types/Image";
 import stylesUrl from "../styles/index.css";
 
@@ -53,14 +53,18 @@ export default function Index() {
     fetcher.submit(new URLSearchParams(`page=${PAGE_NUMBER}`));
   }, []);
 
+  const infiniteScrollRef = useInfiniteScroll(incrementPage);
+
   return (
     <div className="container">
       <div className="content">
         <h1>
           Remix <span>infinite scroll</span>
         </h1>
-        <Grid data={images} loadMore={incrementPage}>
-          <Card />
+        <Grid data={images}>
+          <div ref={infiniteScrollRef}>
+            <Card />
+          </div>
         </Grid>
       </div>
     </div>

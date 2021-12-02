@@ -1,13 +1,10 @@
 import { createContext, useContext } from "react";
-import { LinksFunction } from "remix";
 
-import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 import { GObject } from "../../types/Generics";
 
 type GridProps = {
   data: GObject<unknown>[];
   renderEmpty?: JSX.Element;
-  loadMore: () => void;
   children: React.ReactNode;
   childrenProps?: GObject<unknown>;
 };
@@ -22,18 +19,15 @@ function Grid({
       <h2>This list is empty 😭</h2>
     </div>
   ),
-  loadMore,
   children,
   childrenProps = {},
 }: GridProps) {
-  const infiniteScrollRef = useInfiniteScroll(loadMore);
-
   return !data.length ? (
     renderEmpty
   ) : (
     <ul className="grid-wrapper">
       {data.map((item: GObject<unknown>, index: number) => (
-        <li className="grid-item-wrapper" key={index} ref={infiniteScrollRef}>
+        <li className="grid-item-wrapper" key={index}>
           <GridProvider value={{ item, ...childrenProps }}>
             {children}
           </GridProvider>
